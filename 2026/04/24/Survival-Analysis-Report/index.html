@@ -1,0 +1,409 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Survival Analysis Report (IBM Telco Churn) | Ruan Jingjing</title><meta name="author" content="Ruan Jingjing"><meta name="copyright" content="Ruan Jingjing"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Survival Analysis Report(Q2-2)Background and Data OverviewSurvival analysis is a branch of statistics concerned with the time until an event of interest occurs. In a business context, the “event” is o">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Survival Analysis Report (IBM Telco Churn)">
+<meta property="og:url" content="https://ruanjingjin.me/2026/04/24/Survival-Analysis-Report/index.html">
+<meta property="og:site_name" content="Ruan Jingjing">
+<meta property="og:description" content="Survival Analysis Report(Q2-2)Background and Data OverviewSurvival analysis is a branch of statistics concerned with the time until an event of interest occurs. In a business context, the “event” is o">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://ruanjingjin.me/img/butterfly-icon.png">
+<meta property="article:published_time" content="2026-04-24T11:30:00.000Z">
+<meta property="article:modified_time" content="2026-04-25T06:47:40.767Z">
+<meta property="article:author" content="Ruan Jingjing">
+<meta property="article:tag" content="Data Science">
+<meta property="article:tag" content="SUSTech">
+<meta property="article:tag" content="Survival Analysis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ruanjingjin.me/img/butterfly-icon.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Survival Analysis Report (IBM Telco Churn)",
+  "url": "https://ruanjingjin.me/2026/04/24/Survival-Analysis-Report/",
+  "image": "https://ruanjingjin.me/img/butterfly-icon.png",
+  "datePublished": "2026-04-24T11:30:00.000Z",
+  "dateModified": "2026-04-25T06:47:40.767Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Ruan Jingjing",
+      "url": "https://ruanjingjin.me"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://ruanjingjin.me/2026/04/24/Survival-Analysis-Report/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Survival Analysis Report (IBM Telco Churn)',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.1"></head><body><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Ruan Jingjing</span></a><a class="nav-page-title" href="/"><span class="site-name">Survival Analysis Report (IBM Telco Churn)</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"></div></nav><div id="post-info"><h1 class="post-title">Survival Analysis Report (IBM Telco Churn)</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-04-24T11:30:00.000Z" title="发表于 2026-04-24 19:30:00">2026-04-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-04-25T06:47:40.767Z" title="更新于 2026-04-25 14:47:40">2026-04-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Project-Report/">Project Report</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="Survival-Analysis-Report-Q2-2"><a href="#Survival-Analysis-Report-Q2-2" class="headerlink" title="Survival Analysis Report(Q2-2)"></a>Survival Analysis Report(Q2-2)</h1><h2 id="Background-and-Data-Overview"><a href="#Background-and-Data-Overview" class="headerlink" title="Background and Data Overview"></a>Background and Data Overview</h2><p>Survival analysis is a branch of statistics concerned with the time until an event of interest occurs. In a business context, the “event” is often customer churn, and survival analysis is particularly powerful because it naturally handles <em>censoring</em>—situations where the event has not yet been observed for some customers during the study period. This allows us to unbiasedly estimate customer lifetimes and model the effects of various factors on churn risk.</p>
+<p>The dataset used in this study is the <strong>IBM Telco Customer Churn</strong> dataset, which contains information on 7,043 customers of a fictional telecommunications company, including demographics, account details, and subscribed services. For this analysis, we focus on the segment of customers who subscribe to a <em>Month‑to‑month</em> contract and have either DSL or fiber optic internet service. After applying these filters, the final cohort consists of <strong>3,351 customers</strong>, among whom <strong>1,556</strong> eventually churned (i.e., the event of interest occurred), while the remaining <strong>1,795</strong> are regarded as right‑censored.</p>
+<p>The objectives of this report are twofold. First, we aim to identify key factors that influence customer churn by applying non‑parametric methods (Kaplan–Meier estimator and log‑rank test), semi‑parametric methods (Cox proportional hazards model), and a parametric accelerated failure time (AFT) model. Second, we leverage the survival probabilities estimated from the Cox model to calculate the <strong>customer lifetime value (CLV)</strong>, expressed as the net present value of expected future profits, which can inform retention strategies and resource allocation.</p>
+<h2 id="Data-Preprocessing-and-Exploratory-Analysis"><a href="#Data-Preprocessing-and-Exploratory-Analysis" class="headerlink" title="Data Preprocessing and Exploratory Analysis"></a>Data Preprocessing and Exploratory Analysis</h2><h3 id="Data-Cleaning-and-Feature-Engineering"><a href="#Data-Cleaning-and-Feature-Engineering" class="headerlink" title="Data Cleaning and Feature Engineering"></a>Data Cleaning and Feature Engineering</h3><p>The raw CSV data is first ingested into a <strong>Bronze</strong> layer by specifying an explicit schema. Invalid churn labels (neither “Yes” nor “No”) are removed, and only customers with a <em>Month‑to‑month</em> contract who subscribe to an internet service (DSL or fiber optic) are retained in the <strong>Silver</strong> layer. Categorical variables such as <code>Dependents</code>, <code>InternetService</code>, <code>OnlineBackup</code> and <code>TechSupport</code> are then recoded using one‑hot encoding, producing binary indicator columns that serve as covariates in subsequent survival models. The final dataset contains 3,351 subjects and 1,556 observed churn events.</p>
+<h3 id="Overall-Kaplan–Meier-Survival-Curve"><a href="#Overall-Kaplan–Meier-Survival-Curve" class="headerlink" title="Overall Kaplan–Meier Survival Curve"></a>Overall Kaplan–Meier Survival Curve</h3><p>To obtain a global view of customer retention, we first estimate the survival function for the entire cohort using the Kaplan–Meier (KM) estimator. The resulting curve (图1) shows a steep decline during the first few months of the contract, followed by a more gradual decay. The estimated <strong>median survival time</strong> is <strong>34 months</strong>, meaning that half of the customers in this segment are expected to churn within approximately 34 months of their subscription.</p>
+<p><img src="km_overall.png" alt="Overall KM Curve"><br><em>图1: Overall Kaplan–Meier survival curve for the selected cohort (month‑to‑month contract, internet users).</em></p>
+<h3 id="Stratified-Kaplan–Meier-Curves-and-Log‑Rank-Test"><a href="#Stratified-Kaplan–Meier-Curves-and-Log‑Rank-Test" class="headerlink" title="Stratified Kaplan–Meier Curves and Log‑Rank Test"></a>Stratified Kaplan–Meier Curves and Log‑Rank Test</h3><p>We next examine whether the survival experience differs across levels of several covariates by plotting stratified KM curves and performing the log‑rank test. The variables considered include <code>gender</code>, <code>PaymentMethod</code>, <code>Partner</code>, <code>Dependents</code>, <code>InternetService</code>, <code>OnlineSecurity</code>, <code>OnlineBackup</code>, <code>DeviceProtection</code>, and <code>TechSupport</code>.</p>
+<p>For <strong>Gender</strong>, the two survival curves nearly overlap (图2), and the log‑rank test yields a p‑value of approximately 0.153, indicating no statistically significant difference between male and female customers.</p>
+<p><img src="km_gender.png" alt="KM by Gender"><br><em>图2: Kaplan–Meier survival curves stratified by gender.</em></p>
+<p>In contrast, <strong>PaymentMethod</strong> reveals highly significant differences (图3 and 表1). Customers who pay via electronic check exhibit markedly lower survival probabilities than those using automatic bank transfer, credit card, or mailed check. The pairwise log‑rank tests confirm that electronic check is significantly worse than every other payment method (all p-values &lt; $10^{-10}$), while differences among the remaining methods are not significant.</p>
+<p><img src="km_pm.png" alt="KM by Payment Method"><br><em>图3: Kaplan–Meier survival curves stratified by payment method.</em></p>
+<p><strong>表1: Pairwise log‑rank tests for PaymentMethod (selected comparisons).</strong></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Group 1</th>
+<th>Group 2</th>
+<th>Test statistic</th>
+<th>p‑value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bank transfer (auto.)</td>
+<td>Credit card (auto.)</td>
+<td>0.06</td>
+<td>0.80</td>
+</tr>
+<tr>
+<td>Bank transfer (auto.)</td>
+<td>Electronic check</td>
+<td>91.19</td>
+<td>&lt;0.005</td>
+</tr>
+<tr>
+<td>Bank transfer (auto.)</td>
+<td>Mailed check</td>
+<td>43.54</td>
+<td>&lt;0.005</td>
+</tr>
+<tr>
+<td>Credit card (auto.)</td>
+<td>Electronic check</td>
+<td>79.99</td>
+<td>&lt;0.005</td>
+</tr>
+<tr>
+<td>Credit card (auto.)</td>
+<td>Mailed check</td>
+<td>39.68</td>
+<td>&lt;0.005</td>
+</tr>
+<tr>
+<td>Electronic check</td>
+<td>Mailed check</td>
+<td>0.90</td>
+<td>0.34</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Similar analyses for the other covariates (not all shown here) indicate that most of them, such as <code>OnlineBackup</code> and <code>TechSupport</code>, are strongly associated with survival time and will be included as predictors in the Cox and AFT models.</p>
+<p>To further illustrate the survival experience across different levels of a covariate, 表2 gives the estimated survival probabilities for the first nine months for customers with DSL internet service, obtained from the Kaplan–Meier estimator.</p>
+<p><strong>表2: Estimated survival probabilities (first 9 months) for DSL internet service users.</strong></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Month</th>
+<th>Survival Probability (DSL)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>1.000000</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0.902698</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0.864380</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0.834702</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0.810522</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.794352</td>
+</tr>
+<tr>
+<td>6</td>
+<td>0.783900</td>
+</tr>
+<tr>
+<td>7</td>
+<td>0.776362</td>
+</tr>
+<tr>
+<td>8</td>
+<td>0.768486</td>
+</tr>
+<tr>
+<td>9</td>
+<td>0.750833</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The table indicates, for example, that the probability of a DSL customer surviving (i.e., not churning) beyond the first month is approximately 0.903, and by the ninth month it drops to about 0.751. Such tables can be generated for any covariate level using the <code>survival_function_at_times</code> method of <code>KaplanMeierFitter</code>.</p>
+<h2 id="Cox-Proportional-Hazards-Model"><a href="#Cox-Proportional-Hazards-Model" class="headerlink" title="Cox Proportional Hazards Model"></a>Cox Proportional Hazards Model</h2><h3 id="Model-Motivation-and-Proportional-Hazards-Assumption"><a href="#Model-Motivation-and-Proportional-Hazards-Assumption" class="headerlink" title="Model Motivation and Proportional Hazards Assumption"></a>Model Motivation and Proportional Hazards Assumption</h3><p>The Cox proportional hazards (PH) model is a semi‑parametric regression that relates the hazard function $(h(t \mid \mathbf{x}))$ to a baseline hazard $(h_0(t))$ and a linear predictorz $(\exp(\boldsymbol{\beta}^\top \mathbf{x}))$. The key assumption is that the hazard ratio between any two individuals is <em>constant over time</em>—the proportional hazards (PH) assumption. 图4 illustrates this concept: parallel trends on the hazard scale satisfy the assumption, while diverging trends violate it.</p>
+<p><img src="ph.png" alt="PH illustration"><br><em>图4: Illustration of proportional (left) and non‑proportional (right) hazards.</em></p>
+<h3 id="Data-Preparation-and-Model-Fitting"><a href="#Data-Preparation-and-Model-Fitting" class="headerlink" title="Data Preparation and Model Fitting"></a>Data Preparation and Model Fitting</h3><p>Categorical variables must be one‑hot encoded for the <code>lifelines</code> Cox model. We selected <code>dependents</code>, <code>internetService</code>, <code>onlineBackup</code> and <code>techSupport</code>, and dropped one level from each one‑hot group (the level whose Kaplan–Meier curve most closely resembled the population) to avoid multicollinearity and provide an intuitive baseline. The final model uses the four binary indicators:</p>
+<ul>
+<li><code>dependents_Yes</code></li>
+<li><code>internetService_DSL</code></li>
+<li><code>onlineBackup_Yes</code></li>
+<li><code>techSupport_Yes</code></li>
+</ul>
+<p>We fit the model using <code>CoxPHFitter(alpha=0.05)</code> from the <code>lifelines</code> library. The model summary is shown in 图5.</p>
+<p><img src="cox_summary.png" alt="Cox model summary"><br><em>图5: Cox proportional hazards model summary.</em></p>
+<h3 id="Interpretation-of-Coefficients"><a href="#Interpretation-of-Coefficients" class="headerlink" title="Interpretation of Coefficients"></a>Interpretation of Coefficients</h3><p>All four covariates have negative coefficients, meaning each reduces the instantaneous risk of churn relative to its baseline category. The hazard ratios (HR) and their 95% confidence intervals are:</p>
+<ul>
+<li><strong>dependents_Yes</strong>: HR = 0.72 (95% CI: 0.63–0.83). Having dependents lowers churn risk by 28%.</li>
+<li><strong>internetService_DSL</strong>: HR = 0.80 (95% CI: 0.72–0.90). DSL users have a 20% lower hazard compared to fiber optic users.</li>
+<li><strong>onlineBackup_Yes</strong>: HR = 0.46 (95% CI: 0.41–0.52). Online backup subscribers experience a 54% reduction in hazard.</li>
+<li><strong>techSupport_Yes</strong>: HR = 0.53 (95% CI: 0.46–0.61). Tech support reduces hazard by 47%.</li>
+</ul>
+<p>The forest plot in 图6 summarises these effects. The model’s concordance index is 0.64 and the likelihood ratio test is highly significant (p&lt;0.005).</p>
+<p><img src="cox_forest.png" alt="Cox forest plot"><br><em>图6: Cox model hazard ratios with 95% confidence intervals.</em></p>
+<h3 id="Checking-the-Proportional-Hazards-Assumption"><a href="#Checking-the-Proportional-Hazards-Assumption" class="headerlink" title="Checking the Proportional Hazards Assumption"></a>Checking the Proportional Hazards Assumption</h3><p>The PH assumption is critical for inference. We check it using three complementary methods.</p>
+<h4 id="Statistical-test"><a href="#Statistical-test" class="headerlink" title="Statistical test"></a>Statistical test</h4><p>We apply the scaled Schoenfeld residual test via <code>cph.check_assumptions()</code>. As 表3 shows, <code>dependents_Yes</code> satisfies the assumption (p=0.37), while the other three covariates strongly violate it (p&lt;0.0005). This pattern mirrors the original tutorial findings.</p>
+<p><strong>表3: Scaled Schoenfeld residual test (rank‑transformed time) for the Cox model.</strong></p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Covariate</th>
+<th>Test statistic</th>
+<th>p‑value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dependents_Yes</td>
+<td>0.81</td>
+<td>0.37</td>
+</tr>
+<tr>
+<td>internetService_DSL</td>
+<td>26.71</td>
+<td>&lt;0.005</td>
+</tr>
+<tr>
+<td>onlineBackup_Yes</td>
+<td>17.47</td>
+<td>&lt;0.005</td>
+</tr>
+<tr>
+<td>techSupport_Yes</td>
+<td>13.76</td>
+<td>&lt;0.005</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="Schoenfeld-residual-plots"><a href="#Schoenfeld-residual-plots" class="headerlink" title="Schoenfeld residual plots"></a>Schoenfeld residual plots</h4><p>Schoenfeld residuals should show no trend over time if the PH assumption holds. 图7 displays the residual plots for the four covariates. For <code>dependents_Yes</code> the residual line is roughly flat, confirming the test result. In contrast, <code>internetService_DSL</code>, <code>onlineBackup_Yes</code>, and <code>techSupport_Yes</code> exhibit clear and consistent trends, especially <code>onlineBackup_Yes</code> which shows the most pronounced deviation. These visual patterns reinforce the statistical findings.</p>
+<p><img src="sr_1.png" alt="Schoenfeld residuals part 1"><br><em>图7a: Schoenfeld residuals – part 1</em></p>
+<p><img src="sr_2.png" alt="Schoenfeld residuals part 2"><br><em>图7b: Schoenfeld residuals – part 2</em></p>
+<h4 id="Log‑log-Kaplan–Meier-plots"><a href="#Log‑log-Kaplan–Meier-plots" class="headerlink" title="Log‑log Kaplan–Meier plots"></a>Log‑log Kaplan–Meier plots</h4><p>Log‑log survival plots provide a direct graphical check: parallel curves suggest the PH assumption holds, while crossing or diverging curves signal violations. 图8 shows the log‑log KM curves for the four covariates used in the model.</p>
+<p>With the <em>exception of</em> <code>internetService_DSL</code>, the curves for the other three covariates are mostly parallel when log(time) is between 1 and 3, but deviate noticeably when log(time) is less than 1 or greater than 3. This pattern is consistent with the original tutorial’s observation and explains why the global Schoenfeld tests reject PH for those covariates. Despite the violations, the model can still be used for approximate inference, especially if the focus is on the central range of the observation period.</p>
+<p><img src="km_o.png" alt="Log-log KM for onlineBackup"><br><em>图8a: Log‑log Kaplan–Meier plot for <code>onlineBackup</code></em></p>
+<p><img src="km_d.png" alt="Log-log KM for dependents"><br><em>图8b: Log‑log Kaplan–Meier plot for <code>dependents</code></em></p>
+<p><img src="km_i.png" alt="Log-log KM for internetService"><br><em>图8c: Log‑log Kaplan–Meier plot for <code>internetService</code></em></p>
+<p><img src="km_t.png" alt="Log-log KM for techSupport"><br><em>图8d: Log‑log Kaplan–Meier plot for <code>techSupport</code></em></p>
+<p>In summary, the PH assumption is satisfied for <code>dependents_Yes</code> but not for the remaining three covariates. The violation is most severe for <code>onlineBackup_Yes</code>. Nevertheless, the model provides useful average hazard ratio estimates, and the identified risk factors are consistent with prior exploratory analysis.</p>
+<h2 id="Accelerated-Failure-Time-AFT-Model"><a href="#Accelerated-Failure-Time-AFT-Model" class="headerlink" title="Accelerated Failure Time (AFT) Model"></a>Accelerated Failure Time (AFT) Model</h2><h3 id="Model-Motivation-and-Distribution-Diagnostics"><a href="#Model-Motivation-and-Distribution-Diagnostics" class="headerlink" title="Model Motivation and Distribution Diagnostics"></a>Model Motivation and Distribution Diagnostics</h3><p>While the Cox proportional hazards model is widely used, it does not directly model survival times. The accelerated failure time (AFT) model parametrically models the logarithm of survival time as a linear function of covariates. This yields an intuitive <em>acceleration factor</em>: a value greater than 1 indicates that the expected survival time is prolonged by that factor.</p>
+<p>We choose the log‑logistic distribution for the AFT model because of its flexibility in handling non‑monotonic hazards. However, the model requires verification of two key assumptions:</p>
+<ol>
+<li><strong>Distributional assumption:</strong> The specified distribution (log‑logistic) is appropriate if the log‑odds of failure are approximately linear in log‑time.</li>
+<li><strong>Proportional odds assumption:</strong> The effect of a covariate is constant across time if the log‑odds curves for different levels of that covariate are parallel.</li>
+</ol>
+<p>Both assumptions can be assessed graphically by plotting $(\ln\bigl((1-S(t))/S(t)\bigr))$ against $(\ln(t))$ for each level of a categorical covariate. Straight and parallel lines support the model.</p>
+<p>We generated such plots for all eight covariates used in the model. The full set of diagnostics is omitted here for brevity, but representative plots for <code>Partner</code> and <code>MultipleLines</code> are shown in 图9. As the original analysis notes, for most covariates the lines are <em>relatively straight</em>, suggesting that the log‑logistic distribution is a reasonable choice. However, the lines are often <em>not parallel</em>, indicating that the proportional odds assumption of the AFT model is not fully satisfied. Consequently, the AFT results should be interpreted with caution, although they still provide useful insights into covariate effects on survival time.</p>
+<p><img src="logodds_partner.png" alt="Log-odds for Partner"><br><em>图9a: Log‑odds of failure versus log‑time for <code>Partner</code></em></p>
+<p><img src="logodds_multi.png" alt="Log-odds for MultipleLines"><br><em>图9b: Log‑odds of failure versus log‑time for <code>MultipleLines</code></em></p>
+<h3 id="Model-Fitting-and-Summary"><a href="#Model-Fitting-and-Summary" class="headerlink" title="Model Fitting and Summary"></a>Model Fitting and Summary</h3><p>The log‑logistic AFT model was fitted using <code>LogLogisticAFTFitter</code> from the <code>lifelines</code> library. The following covariates were included (the baseline levels are those omitted in the one‑hot encoding): <code>partner_Yes</code>, <code>multipleLines_Yes</code>, <code>internetService_DSL</code>, <code>onlineSecurity_Yes</code>, <code>onlineBackup_Yes</code>, <code>deviceProtection_Yes</code>, <code>techSupport_Yes</code>, and two payment method indicators (<code>paymentMethod_Bank transfer (automatic)</code> and <code>paymentMethod_Credit card (automatic)</code>). This set matches the Cox model but adds several service‑related variables.</p>
+<p>The model summary is shown in 图10. All covariates are statistically significant (p&lt;0.005), and the model yields a concordance index of 0.73, reflecting improved predictive accuracy compared to the simpler Cox specification. The exponentiated median survival time at the baseline is approximately 135.5 months, serving as a reference.</p>
+<p><img src="aft_summary.png" alt="AFT model summary"><br><em>图10: Log‑logistic AFT model summary.</em></p>
+<h3 id="Interpretation-of-Acceleration-Factors"><a href="#Interpretation-of-Acceleration-Factors" class="headerlink" title="Interpretation of Acceleration Factors"></a>Interpretation of Acceleration Factors</h3><p>In the log‑logistic AFT model, the coefficient $(\beta)$ is interpreted such that $(\exp(\beta))$ is the acceleration factor. A value larger than 1 means the expected survival time is multiplied by that factor relative to the baseline category. For instance, the coefficient for <code>internetService_DSL</code> is $(0.38)$, giving $(\exp(0.38) \approx 1.47)$; this indicates that a customer with DSL internet survives roughly 1.47 times as long as a fiber‑optic user. All covariates have $(\exp(\beta) &gt; 1)$, confirming their protective effect on retention. Selected acceleration factors are:</p>
+<ul>
+<li><strong>techSupport_Yes</strong>: (\exp(\beta) \approx 1.99) – nearly doubles expected lifetime.</li>
+<li><strong>onlineBackup_Yes</strong>: (\exp(\beta) \approx 2.25) – more than doubles survival time.</li>
+<li><strong>onlineSecurity_Yes</strong>: (\exp(\beta) \approx 2.37) – the largest effect among the service features.</li>
+<li><strong>partner_Yes</strong>: (\exp(\beta) \approx 1.97) – having a partner roughly doubles expected lifetime.</li>
+<li><strong>deviceProtection_Yes</strong>: (\exp(\beta) \approx 1.62) – a smaller but still positive effect.</li>
+<li><strong>paymentMethod_Bank transfer (automatic)</strong> and <strong>Credit card (automatic)</strong>: $(\exp(\beta))$ around 2.10–2.22, indicating that automatic payment methods are associated with substantially longer retention compared to electronic check.</li>
+</ul>
+<p>The regression coefficients with 95% confidence intervals are plotted in 图11. The intervals are all well above zero, confirming the significance and direction of each effect.</p>
+<p><img src="aft_coef.png" alt="AFT coefficients"><br><em>图11: Log‑logistic AFT model coefficients (acceleration factors) with 95% CI.</em></p>
+<h3 id="Model-Limitations"><a href="#Model-Limitations" class="headerlink" title="Model Limitations"></a>Model Limitations</h3><p>As noted during the diagnostic step, the log‑odds curves are not perfectly parallel for many covariates. This means that the proportional odds assumption of the AFT model is not fully satisfied, and the estimated acceleration factors may not be constant over time. While the model still offers useful directional insights and complements the Cox findings, results involving covariates with noticeable non‑parallelism (such as <code>MultipleLines</code>) should be interpreted conservatively. Future work could consider alternative parametric distributions (e.g., Weibull or log‑normal) or more flexible models to better capture time‑varying effects.</p>
+<h2 id="Customer-Lifetime-Value"><a href="#Customer-Lifetime-Value" class="headerlink" title="Customer Lifetime Value"></a>Customer Lifetime Value</h2><h3 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h3><p>Customer Lifetime Value (CLV) quantifies the net present value of expected future profits from a customer. We estimate CLV using the survival probabilities produced by the fitted Cox proportional hazards model.</p>
+<p>For a given customer profile, the model predicts a survival function $(S(t))$, which gives the probability that the customer has not yet churned by month $(t)$. Assuming a constant monthly profit per active customer, the expected profit in month $(t)$ is $(\pi \cdot S(t))$, where $(\pi)$ is the fixed monthly profit. The present value of this expected profit is then obtained by discounting at a monthly rate $(r)$, resulting in the net present value (NPV) in month $(t)$:</p>
+<p>$ [<br>\text{NPV}_t = \frac{\pi \cdot S(t)}{(1 + r)^t}.<br>] $</p>
+<p>The cumulative CLV up to month $ (T) $ is the sum of $ (\text{NPV}_t) $ for $ (t = 1, \dots, T) $. This cumulative measure tells us the maximum amount a business should be willing to spend to acquire or retain a customer while breaking even over the chosen horizon.</p>
+<p>In our application, we set $ (\pi = 30) $ (illustrative units) and use an annual internal rate of return of 10%, which translates to a monthly discount rate $ (r = 0.10 / 12 \approx 0.00833) $. The survival probabilities are obtained by calling <code>cph.predict_survival_function()</code> on the selected covariate values. The widgets in the original Databricks dashboard allow interactive exploration of different covariate combinations; for the static report we present the baseline profile where all binary covariates are set to 0 (i.e., the reference category).</p>
+<h3 id="CLV-Table"><a href="#CLV-Table" class="headerlink" title="CLV Table"></a>CLV Table</h3><p>图12 shows the first 25 months of the lifetime value calculation for the baseline customer. The survival probability drops quickly in the early months, causing the expected monthly profit and its discounted value to decline over time. The cumulative NPV grows but at a diminishing rate.</p>
+<p><img src="clv_table.png" alt="CLV table"><br><em>图12: Customer lifetime value calculation for the baseline profile (first 40 months).</em></p>
+<h3 id="Cumulative-NPV-at-Standard-Horizons"><a href="#Cumulative-NPV-at-Standard-Horizons" class="headerlink" title="Cumulative NPV at Standard Horizons"></a>Cumulative NPV at Standard Horizons</h3><p>图13 compares the cumulative NPV at 12, 24, and 36 months. These values provide a direct estimate of the maximum one‑time investment that would break even over each horizon. Based on the Cox model and the assumed profit and discount rate, the cumulative NPVs are:</p>
+<ul>
+<li>12 months: 251.40 monetary units,</li>
+<li>24 months: 405.44 monetary units,</li>
+<li>36 months: 508.64 monetary units.</li>
+</ul>
+<p><img src="clv_bar_chart.png" alt="CLV bar chart"><br><em>图13: Cumulative NPV at 12, 24, and 36 months for the baseline customer.</em></p>
+<h3 id="Survival-Probability-Curve"><a href="#Survival-Probability-Curve" class="headerlink" title="Survival Probability Curve"></a>Survival Probability Curve</h3><p>The predicted survival curve for the baseline profile (图14) declines steeply over the first few months and then flattens, consistent with the overall Kaplan–Meier estimate. This curve forms the basis of the CLV calculation.</p>
+<p><img src="clv_l.png" alt="Predicted survival probability"><br><em>图14: Predicted survival probability by contract month (baseline profile).</em></p>
+<p>The CLV analysis demonstrates how survival model outputs can be translated into actionable financial metrics. By varying the covariate settings (e.g., enabling services like online backup or tech support), one can quantify the incremental value of retention investments and identify the most cost‑effective strategies.</p>
+<h2 id="Conclusion-and-Recommendations"><a href="#Conclusion-and-Recommendations" class="headerlink" title="Conclusion and Recommendations"></a>Conclusion and Recommendations</h2><p>This report applied three complementary survival analysis techniques—Kaplan–Meier estimation, the Cox proportional hazards model, and a log‑logistic accelerated failure time (AFT) model—to identify drivers of customer churn in the IBM Telco dataset and to translate those insights into customer lifetime value estimates.</p>
+<p><strong>Key Findings.</strong> The overall median survival time for month‑to‑month internet subscribers is approximately 34 months. All four covariates included in the Cox model—<code>dependents_Yes</code>, <code>internetService_DSL</code>, <code>onlineBackup_Yes</code>, and <code>techSupport_Yes</code>—are statistically significant and are associated with lower churn risk. Among them, <code>onlineBackup_Yes</code> and <code>techSupport_Yes</code> stand out, reducing the instantaneous hazard by 54% and 47%, respectively. The AFT model reinforces these conclusions: customers with these services are expected to survive 2.0–2.3 times longer than those without, although the proportional odds assumption of the AFT model is not fully satisfied. The CLV analysis shows that even a baseline customer is expected to generate a cumulative net present value of about 251 units over 12 months, 405 units over 24 months, and a similar increasing amount over 36 months, providing a quantitative benchmark for acquisition and retention spending.</p>
+<p><strong>Model Limitations.</strong> The proportional hazards assumption of the Cox model is violated for three of the four covariates, particularly for <code>onlineBackup_Yes</code>. This means that the reported hazard ratios represent average effects that may vary over time. Likewise, the log‑logistic AFT model does not meet the proportional odds assumption. Unobserved confounders (e.g., customer satisfaction, service quality) may also bias the estimates. Therefore, the results should be interpreted as associative rather than strictly causal.</p>
+<p><strong>Business Recommendations.</strong> Given the strong protective effects of online backup and tech support, the company should actively promote these add‑on services, especially to high‑risk segments such as customers paying via electronic check. DSL users also show better retention, suggesting that encouraging DSL adoption (where feasible) could reduce churn. The CLV metrics provide a direct way to evaluate retention investments: any intervention whose cost per retained customer is below the expected incremental CLV would be financially justified.</p>
+<p><strong>Future Work.</strong> To address the PH violations, future analyses could employ a stratified Cox model (stratifying on variables that fail the PH test) or incorporate time‑dependent covariates. More flexible approaches, such as cubic spline‑based Cox models or machine‑learning survival ensembles (e.g., random survival forests), could further improve both inference and predictive performance. Extending the CLV dashboard to support dynamic what‑if scenarios would also enhance its practical value for decision‑making.</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://ruanjingjin.me">Ruan Jingjing</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://ruanjingjin.me/2026/04/24/Survival-Analysis-Report/">https://ruanjingjin.me/2026/04/24/Survival-Analysis-Report/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://ruanjingjin.me" target="_blank">Ruan Jingjing</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Data-Science/">Data Science</a><a class="post-meta__tags" href="/tags/Survival-Analysis/">Survival Analysis</a><a class="post-meta__tags" href="/tags/SUSTech/">SUSTech</a></div><div class="post-share"><div class="social-share" data-image="/img/butterfly-icon.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/04/25/hello-world/" title="Hello World"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Hello World</div></div><div class="info-2"><div class="info-item-1">Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1$ hexo new &quot;My New Post&quot; More info: Writing Run server1$ hexo server More info: Server Generate static files1$ hexo generate More info: Generating Deploy to remote sites1$ hexo deploy More info: Deployment </div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/butterfly-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Ruan Jingjing</div><div class="author-info-description">Personal website of Ruan Jingjing – projects, blogs, and more.</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Survival-Analysis-Report-Q2-2"><span class="toc-number">1.</span> <span class="toc-text">Survival Analysis Report(Q2-2)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Background-and-Data-Overview"><span class="toc-number">1.1.</span> <span class="toc-text">Background and Data Overview</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Data-Preprocessing-and-Exploratory-Analysis"><span class="toc-number">1.2.</span> <span class="toc-text">Data Preprocessing and Exploratory Analysis</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Data-Cleaning-and-Feature-Engineering"><span class="toc-number">1.2.1.</span> <span class="toc-text">Data Cleaning and Feature Engineering</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Overall-Kaplan%E2%80%93Meier-Survival-Curve"><span class="toc-number">1.2.2.</span> <span class="toc-text">Overall Kaplan–Meier Survival Curve</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Stratified-Kaplan%E2%80%93Meier-Curves-and-Log%E2%80%91Rank-Test"><span class="toc-number">1.2.3.</span> <span class="toc-text">Stratified Kaplan–Meier Curves and Log‑Rank Test</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cox-Proportional-Hazards-Model"><span class="toc-number">1.3.</span> <span class="toc-text">Cox Proportional Hazards Model</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Model-Motivation-and-Proportional-Hazards-Assumption"><span class="toc-number">1.3.1.</span> <span class="toc-text">Model Motivation and Proportional Hazards Assumption</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Data-Preparation-and-Model-Fitting"><span class="toc-number">1.3.2.</span> <span class="toc-text">Data Preparation and Model Fitting</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Interpretation-of-Coefficients"><span class="toc-number">1.3.3.</span> <span class="toc-text">Interpretation of Coefficients</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Checking-the-Proportional-Hazards-Assumption"><span class="toc-number">1.3.4.</span> <span class="toc-text">Checking the Proportional Hazards Assumption</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Statistical-test"><span class="toc-number">1.3.4.1.</span> <span class="toc-text">Statistical test</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Schoenfeld-residual-plots"><span class="toc-number">1.3.4.2.</span> <span class="toc-text">Schoenfeld residual plots</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Log%E2%80%91log-Kaplan%E2%80%93Meier-plots"><span class="toc-number">1.3.4.3.</span> <span class="toc-text">Log‑log Kaplan–Meier plots</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Accelerated-Failure-Time-AFT-Model"><span class="toc-number">1.4.</span> <span class="toc-text">Accelerated Failure Time (AFT) Model</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Model-Motivation-and-Distribution-Diagnostics"><span class="toc-number">1.4.1.</span> <span class="toc-text">Model Motivation and Distribution Diagnostics</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Model-Fitting-and-Summary"><span class="toc-number">1.4.2.</span> <span class="toc-text">Model Fitting and Summary</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Interpretation-of-Acceleration-Factors"><span class="toc-number">1.4.3.</span> <span class="toc-text">Interpretation of Acceleration Factors</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Model-Limitations"><span class="toc-number">1.4.4.</span> <span class="toc-text">Model Limitations</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Customer-Lifetime-Value"><span class="toc-number">1.5.</span> <span class="toc-text">Customer Lifetime Value</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Methodology"><span class="toc-number">1.5.1.</span> <span class="toc-text">Methodology</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CLV-Table"><span class="toc-number">1.5.2.</span> <span class="toc-text">CLV Table</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cumulative-NPV-at-Standard-Horizons"><span class="toc-number">1.5.3.</span> <span class="toc-text">Cumulative NPV at Standard Horizons</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Survival-Probability-Curve"><span class="toc-number">1.5.4.</span> <span class="toc-text">Survival Probability Curve</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion-and-Recommendations"><span class="toc-number">1.6.</span> <span class="toc-text">Conclusion and Recommendations</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/25/hello-world/" title="Hello World">Hello World</a><time datetime="2026-04-25T03:50:23.300Z" title="发表于 2026-04-25 11:50:23">2026-04-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/24/Survival-Analysis-Report/" title="Survival Analysis Report (IBM Telco Churn)">Survival Analysis Report (IBM Telco Churn)</a><time datetime="2026-04-24T11:30:00.000Z" title="发表于 2026-04-24 19:30:00">2026-04-24</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Ruan Jingjing</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/katex.min.css')
+    if (true) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex@0.16.28/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
